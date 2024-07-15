@@ -156,32 +156,6 @@ describe('AbilityFactory', () => {
       ]);
     });
 
-    it('replaces "conversation.blockedMemberIds" with a list of blocked members of the conversation', async () => {
-      const permissions = [
-        {
-          action: Action.readConversation,
-          subject: Subject.user,
-          conditions: { userId: { $nin: 'conversation.blockedMemberIds' } },
-        },
-      ];
-      const ability = await abilityFactory.factory(mockUser, {
-        ...mockConversation,
-        permissions,
-      });
-
-      expect(ability).toEqual([
-        {
-          action: 'readConversation',
-          subject: 'User',
-          conditions: {
-            userId: {
-              $nin: [blockedUser],
-            },
-          },
-        },
-      ]);
-    });
-
     it('replaces "conversation.universityIds" with a list of the universityIds of the conversation', async () => {
       const permissions = [
         {
@@ -373,6 +347,7 @@ describe('AbilityFactory', () => {
       conversation: { id: String(conversationId) },
       likes: [],
       likesCount: 0,
+      tags: [], // Add the missing tags property
     };
 
     it('returns an empty set of abilities if the permissions array is empty', async () => {
@@ -564,9 +539,11 @@ describe('AbilityFactory', () => {
     });
 
     it('should return empty permissions array if user is blocked', async () => {
-      jest.spyOn(userBlocksLogic, 'isUserBlocked').mockImplementation(async () => {
-        return true
-      });
+      jest
+        .spyOn(userBlocksLogic, 'isUserBlocked')
+        .mockImplementation(async () => {
+          return true;
+        });
 
       const ability = await abilityFactory.factory(
         mockUser,

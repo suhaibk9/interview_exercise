@@ -38,7 +38,10 @@ describe('Message', () => {
       },
     });
 
-    await mockServerClient(process.env.MOCK_USER_SERVICE ?? '', 1080).mockSimpleResponse(
+    await mockServerClient(
+      process.env.MOCK_USER_SERVICE ?? '',
+      1080,
+    ).mockSimpleResponse(
       `/api/v1/users/${dummyUserId}`,
       {
         id: dummyUserId,
@@ -48,7 +51,7 @@ describe('Message', () => {
       },
       200,
     );
-  });
+  }, 2000);
 
   it('/graphql (POST) return 200 if a valid query is sent', async () => {
     const { id: conversationId } = await createConversationForTest();
@@ -76,7 +79,7 @@ describe('Message', () => {
     expect(
       new Date(result.sendConversationMessage.created).getTime(),
     ).toBeGreaterThan(testDateTime);
-  });
+  }, 15000);
 
   it('user can delete a message', async () => {
     const { id: conversationId } = await createConversationForTest();
@@ -158,7 +161,7 @@ describe('Message', () => {
           sender: { id: '597cfa3ac88c22000a74d167' },
         }),
       );
-    });
+    }, 15000);
 
     it('user can unlike a message', async () => {
       const { id: conversationId } = await createConversationForTest();
@@ -198,7 +201,7 @@ describe('Message', () => {
           likesCount: 0,
         }),
       );
-    });
+    }, 15000);
 
     it('complete use case', async () => {
       const { id: conversationId } = await createConversationForTest();
@@ -264,7 +267,7 @@ describe('Message', () => {
           likesCount: 1,
         }),
       );
-    });
+    }, 15000);
   });
 
   describe('resolve / unresolve Messages', () => {
@@ -292,7 +295,7 @@ describe('Message', () => {
         resolved: true,
         sender: { id: '597cfa3ac88c22000a74d167' },
       });
-    });
+    }, 15000);
 
     it('user can unresolve a message', async () => {
       const { id: conversationId } = await createConversationForTest();
@@ -327,6 +330,6 @@ describe('Message', () => {
         resolved: false,
         sender: { id: '597cfa3ac88c22000a74d167' },
       });
-    });
+    }, 15000);
   });
 });

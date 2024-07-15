@@ -13,6 +13,8 @@ import {
   ResolveMessageDto,
   ReactionDto,
   PollOptionDto,
+  UpdateMessageTagsDto,
+  SearchMessagesByTagsDto,
 } from './models/message.dto';
 import { MessageData } from './message.data';
 import { IAuthenticatedUser } from '../authentication/jwt.strategy';
@@ -278,7 +280,6 @@ export class MessageLogic implements IMessageLogic {
     return blockedUsers.map((user) => user.blockedUserId);
   }
 
-
   async getChatConversationMessages(
     getMessageDto: GetMessageDto,
     authenticatedUser: IAuthenticatedUser,
@@ -313,7 +314,6 @@ export class MessageLogic implements IMessageLogic {
       paginatedChatMessages,
       blockedUserIds,
     );
-  
 
     return paginatedChatMessages;
   }
@@ -696,5 +696,35 @@ export class MessageLogic implements IMessageLogic {
     }
 
     return pollOption;
+  }
+
+  //Tags
+  async updateTags(
+    updateMessageTagsDto: UpdateMessageTagsDto,
+    authenticatedUser: IAuthenticatedUser,
+  ): Promise<ChatMessage> {
+    if (
+      !(await this.permissions.messagePermissions({
+        user: authenticatedUser,
+        messageId: String(updateMessageTagsDto.messageId),
+        action: Action.updateMessage,
+      }))
+    ) {
+      throw new ForbiddenError(
+        `User is not authorised to update tags for this message`,
+      );
+    }
+
+    return await this.messageData.updateTags(
+      new ObjectID(updateMessageTagsDto.messageId),
+      updateMessageTagsDto.tags,
+    );
+  }
+
+  async findByTags(
+    tags: string[],
+    authenticatedUser: IAuthenticatedUser,
+  ): Promise<ChatMessage[]> {
+    return await this.messageData.findByTags(tags);
   }
 }

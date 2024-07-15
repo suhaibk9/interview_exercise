@@ -132,6 +132,7 @@ const replyMessageModel: ChatMessageModel = {
   resolved: false,
   likes: [],
   likesCount: 0,
+  tags: [], // added tags property
 };
 
 const USER_BLOCK_DTO = {
@@ -162,6 +163,7 @@ describe('MessageLogic', () => {
     resolved: false,
     likes: [],
     likesCount: 0,
+    tags: [], // added tags property
   };
 
   const mockGifMessage = {
@@ -198,6 +200,7 @@ describe('MessageLogic', () => {
         richContent: mockGiphyContent,
       },
     },
+    tags: [], // added tags property
   };
 
   const mockUser = {
@@ -254,6 +257,7 @@ describe('MessageLogic', () => {
         id: messageId,
         deleted: true,
         resolved: false,
+        tags: [], // added tags property
       };
     }
 
@@ -269,6 +273,7 @@ describe('MessageLogic', () => {
         id: messageId,
         deleted: false,
         resolved: true,
+        tags: [], // added tags property
       };
     }
 
@@ -284,6 +289,7 @@ describe('MessageLogic', () => {
         id: messageId,
         deleted: false,
         resolved: false,
+        tags: [], // added tags property
       };
     }
 
@@ -300,6 +306,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [], // added tags property
       };
     }
 
@@ -316,6 +323,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [], // added tags property
       };
     }
 
@@ -338,6 +346,7 @@ describe('MessageLogic', () => {
           likes: [],
           likesCount: 0,
           isSenderBlocked: false,
+          tags: [], // added tags property
         },
 
         {
@@ -354,6 +363,7 @@ describe('MessageLogic', () => {
           likes: [],
           likesCount: 0,
           isSenderBlocked: false,
+          tags: [], // added tags property
         },
       ];
 
@@ -382,6 +392,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [], // added tags property
       };
     }
 
@@ -549,7 +560,6 @@ describe('MessageLogic', () => {
   class MockConversationChannel {
     send = jest.fn();
   }
-
 
   class MockUserBlocksLogic implements IUserBlocksLogic {
     getBlockedUsers(

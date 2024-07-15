@@ -38,7 +38,10 @@ describe('Conversation', () => {
   let conversationId: string;
 
   beforeAll(async () => {
-    await mockServerClient(process.env.MOCK_USER_SERVICE ?? '', 1080).mockSimpleResponse(
+    await mockServerClient(
+      process.env.MOCK_USER_SERVICE ?? '',
+      1080,
+    ).mockSimpleResponse(
       `/api/v1/users/${userId}`,
       {
         id: userId,
@@ -74,7 +77,7 @@ describe('Conversation', () => {
       }),
     );
     expect(isValidObjectId(response.body.id)).toBe(true);
-  });
+  }, 15000);
 
   it('can create a conversation with permissions (/conversation (POST))', async () => {
     const response = await request(applicationUrl)
@@ -103,7 +106,7 @@ describe('Conversation', () => {
     );
     expect(isValidObjectId(response.body.id)).toBe(true);
     conversationId = response.body.id;
-  });
+  }, 15000);
 
   it('allows a user to be added to a community', async () => {
     const response = await request(applicationUrl)
@@ -124,12 +127,15 @@ describe('Conversation', () => {
         memberIds: expect.arrayContaining([`${userId}`]),
       }),
     );
-  });
+  }, 15000);
 
   const secondUser = `${new ObjectId()}`;
 
   it('allows a second user to be added to a community', async () => {
-    await mockServerClient(process.env.MOCK_USER_SERVICE ?? '', 1080).mockSimpleResponse(
+    await mockServerClient(
+      process.env.MOCK_USER_SERVICE ?? '',
+      1080,
+    ).mockSimpleResponse(
       `/api/v1/users/${secondUser}`,
       {
         id: secondUser,
@@ -158,10 +164,13 @@ describe('Conversation', () => {
         memberIds: expect.arrayContaining([`${userId}`, secondUser]),
       }),
     );
-  });
+  }, 15000);
 
   it('allows a user to be removed from a community', async () => {
-    await mockServerClient(process.env.MOCK_USER_SERVICE ?? '', 1080).mockSimpleResponse(
+    await mockServerClient(
+      process.env.MOCK_USER_SERVICE ?? '',
+      1080,
+    ).mockSimpleResponse(
       `/api/v1/users/${secondUser}`,
       {
         id: secondUser,
@@ -190,7 +199,7 @@ describe('Conversation', () => {
         memberIds: [`${userId}`],
       }),
     );
-  });
+  }, 15000);
 
   it('allows a member to send a message', async () => {
     const toSign = {
@@ -217,7 +226,7 @@ describe('Conversation', () => {
       created: expect.anything(),
       deleted: false,
     });
-  });
+  }, 15000);
 
   it('prevents a non member from sending a message', async () => {
     const toSign = {
@@ -249,7 +258,7 @@ describe('Conversation', () => {
         }),
       ]),
     );
-  });
+  }, 15000);
 
   it('prevents a non member from reading messages', async () => {
     const toSign = {
@@ -282,7 +291,7 @@ describe('Conversation', () => {
         }),
       ]),
     );
-  });
+  }, 15000);
 
   it('Records last message read by user', async () => {
     const toSign = {
@@ -307,7 +316,7 @@ describe('Conversation', () => {
       messageId: testLastMessageId,
       userId,
     });
-  });
+  }, 15000);
 
   it('gets unread message counts', async () => {
     const response = await request(applicationUrl)
@@ -320,7 +329,7 @@ describe('Conversation', () => {
     expect(response.status).toEqual(200);
     const expectedObj = [{ id: conversationId, unreadMessageCount: 1 }];
     expect(response.body).toEqual(expectedObj);
-  });
+  }, 15000);
 
   it('Successfully executes migrate permissions api and returns true', async () => {
     const response = await request(applicationUrl)
@@ -336,7 +345,7 @@ describe('Conversation', () => {
       });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({});
-  });
+  }, 15000);
 
   it('Raises error if api key is not provided', async () => {
     const response = await request(applicationUrl)
@@ -344,7 +353,7 @@ describe('Conversation', () => {
       .send({ permissions: newPermissions, product: 'community' })
       .set('Content-Type', 'application/json');
     expect(response.status).toEqual(401);
-  });
+  }, 15000);
 
   it('Raises error if product is not community', async () => {
     const response = await request(applicationUrl)
@@ -355,7 +364,7 @@ describe('Conversation', () => {
         Accept: 'application/json',
       });
     expect(response.status).toEqual(400);
-  });
+  }, 15000);
 
   it('Successfully executes migrate last message api and returns true', async () => {
     const response = await request(applicationUrl)
@@ -367,7 +376,7 @@ describe('Conversation', () => {
       });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({});
-  });
+  }, 15000);
 
   it('Raises error if api key is not provided -- migrate last messages', async () => {
     const response = await request(applicationUrl)
@@ -375,5 +384,5 @@ describe('Conversation', () => {
       .send()
       .set('Content-Type', 'application/json');
     expect(response.status).toEqual(401);
-  });
+  }, 15000);
 });

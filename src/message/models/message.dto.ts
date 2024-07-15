@@ -119,6 +119,20 @@ export class MessageDto {
   @Field(() => RichContentDto, { nullable: true })
   richContent?: RichContentDto;
 }
+@InputType()
+export class UpdateMessageTagsDto {
+  @Field()
+  messageId: ObjectID;
+
+  @Field(() => [String])
+  tags: string[];
+}
+
+@InputType()
+export class SearchMessagesByTagsDto {
+  @Field(() => [String])
+  tags: string[];
+}
 
 // TODO Min - Max on limit
 @InputType()
